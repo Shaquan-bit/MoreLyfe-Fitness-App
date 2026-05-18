@@ -1,0 +1,19 @@
+
+> morelyfe-fitness@1.0.0 web
+> expo start --web --port 8084
+
+Starting project at C:\Users\QuanL\Downloads\mobile-apps-project\MoreLyfeFitness
+Starting Metro Bundler
+Waiting on http://localhost:8084
+Logs for your project will appear below.
+Web node_modules\expo\AppEntry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web node_modules\expo\AppEntry.js ░░░░░░░░░░░░░░░░  1.0% (1/3)
+Web node_modules\expo\AppEntry.js ░░░░░░░░░░░░░░░░  4.8% (12/57)
+Web node_modules\expo\AppEntry.js ▓░░░░░░░░░░░░░░░ 12.2% (30/97)
+Web node_modules\expo\AppEntry.js ▓▓▓▓▓░░░░░░░░░░░ 32.4% ( 90/158)
+Web node_modules\expo\AppEntry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.7% (643/644)
+Web Bundled 18274ms node_modules\expo\AppEntry.js (646 modules)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules\expo\AppEntry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 88ms node_modules\expo\AppEntry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
