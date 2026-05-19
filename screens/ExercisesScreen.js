@@ -1,5 +1,4 @@
-// screens/ExercisesScreen.js
-// Shows all exercises. You can add, edit and delete them.
+// shows all exercises. CRUD functionality
 
 import React, { useState, useEffect } from "react";
 import {
@@ -28,6 +27,8 @@ import {
   AppImage,
 } from "../components/SharedComponents";
 
+//  images for certain exercises based on name or category
+
 const exerciseImages = {
   pushUp: require("../assets/push-ups.jpeg"),
   squat: require("../assets/squats.jpeg"),
@@ -36,6 +37,7 @@ const exerciseImages = {
 };
 
 export default function ExercisesScreen() {
+  // stores the exercise list, modal state, and form values
   const [exercises, setExercises] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingExercise, setEditingExercise] = useState(null);
@@ -59,6 +61,7 @@ export default function ExercisesScreen() {
   ];
   const difficulties = ["Beginner", "Intermediate", "Advanced"];
 
+  // loads saved exercises when the screen first opens
   useEffect(() => {
     loadExercises();
   }, []);
@@ -68,12 +71,14 @@ export default function ExercisesScreen() {
     if (data) setExercises(data);
   }
 
+  // opens the form for adding a new exercise
   function openAddModal() {
     setEditingExercise(null);
     clearForm();
     setModalVisible(true);
   }
 
+  // opens the form and fills it with the exercise being edited
   function openEditModal(exercise) {
     setEditingExercise(exercise);
     setFormName(exercise.name);
@@ -84,6 +89,7 @@ export default function ExercisesScreen() {
     setModalVisible(true);
   }
 
+  // clears the form values when closing the modal or after saving
   function clearForm() {
     setFormName("");
     setFormCategory("");
@@ -92,6 +98,7 @@ export default function ExercisesScreen() {
     setFormInstructions("");
   }
 
+  // saves either a new exercise or updates an existing one
   async function handleSave() {
     if (
       !formName.trim() ||
@@ -134,6 +141,8 @@ export default function ExercisesScreen() {
     clearForm();
   }
 
+  // confirms if u wanna delete and removes the exercise if confirmed
+
   function handleDelete(exercise) {
     Alert.alert("Delete Exercise", `Delete "${exercise.name}"?`, [
       { text: "Cancel", style: "cancel" },
@@ -148,12 +157,16 @@ export default function ExercisesScreen() {
     ]);
   }
 
+  // returns a color based on the difficulty level for badge styling
+
   function difficultyColor(level) {
     if (level === "Beginner") return Colors.success;
     if (level === "Intermediate") return Colors.warning;
     if (level === "Advanced") return Colors.danger;
     return Colors.textSecondary;
   }
+
+  // returns an image based on the exercise name or category
 
   function getExerciseImage(exercise) {
     const name = (exercise.name || "").toLowerCase();
@@ -168,6 +181,7 @@ export default function ExercisesScreen() {
     return null;
   }
 
+  // renders the main screen with a header, list of exercises, and a modal for adding/editing exercises
   return (
     <View style={SharedStyles.container}>
       <StatusBar barStyle="light-content" />
@@ -213,7 +227,6 @@ export default function ExercisesScreen() {
           ))
         )}
       </ScrollView>
-
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
@@ -352,6 +365,8 @@ export default function ExercisesScreen() {
   );
 }
 
+// card for each exercise in the list showing details when expanded
+
 function ExerciseCard({
   exercise,
   expanded,
@@ -424,6 +439,8 @@ function ExerciseCard({
     </View>
   );
 }
+
+// styles for the exercise screen and cards
 
 const styles = StyleSheet.create({
   addButton: {

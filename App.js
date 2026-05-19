@@ -1,6 +1,5 @@
-// App.js
-// This is where the app starts. It checks if someone is already
-// logged in and loads sample data on the very first launch.
+/* this is where the app starts it checks if someone is already
+ logged in and loads sample data on the very first launch. */
 
 import React, { useState, useEffect } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
@@ -21,10 +20,12 @@ import { BrandLogo } from "./components/SharedComponents";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // startup loading and current login status
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // initialize sample data and load saved session before rendering app
     async function startApp() {
       await initializeSampleData();
 
@@ -38,6 +39,7 @@ export default function App() {
   }, []);
 
   if (isLoading) {
+    // show a simple launch splash while the app prepares data
     return (
       <View style={styles.splash}>
         <BrandLogo size={116} />
@@ -49,7 +51,7 @@ export default function App() {
       </View>
     );
   }
-
+  // once loading is done show the app navigation with the appropriate initial screen
   return (
     <SafeAreaProvider>
       <NavigationContainer>

@@ -1,3 +1,5 @@
+// first screen users see before logging in or registering
+
 import React from "react";
 import {
   View,
@@ -10,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../storage/Theme";
 import { BrandLogo } from "../components/SharedComponents";
 
+// shows the welcome screen with the app logo, name, tagline, and buttons to login or register
 export default function WelcomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
@@ -58,6 +61,7 @@ export default function WelcomeScreen({ navigation }) {
   );
 }
 
+// small row item showing the welcome screen features
 function FeatureItem({ icon, label }) {
   return (
     <View style={styles.featureItem}>
@@ -67,6 +71,7 @@ function FeatureItem({ icon, label }) {
   );
 }
 
+// styles for the welcome screen and feature blocks
 const styles = StyleSheet.create({
   container: {
     flex: 1,

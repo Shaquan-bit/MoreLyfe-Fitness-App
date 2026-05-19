@@ -1,5 +1,8 @@
+// local storage helpers for app data: users, login session, exercises, meals, workouts, and sample seed data.
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// asyncStorage key constants for stored app data
 export const KEYS = {
   USERS: "morelyfe_users",
   CURRENT_USER: "morelyfe_current_user",
@@ -8,6 +11,7 @@ export const KEYS = {
   WORKOUTS: "morelyfe_workouts",
 };
 
+// sample seed data inserted into storage on first launch
 export const SAMPLE_EXERCISES = [
   {
     id: "1",
@@ -145,8 +149,9 @@ export const SAMPLE_USERS = [
   },
 ];
 
-// users
+// user storage helpers: load saved accounts, persist new users, and validate login credentials.
 
+// load the saved users list from AsyncStorage or return an empty array if no users are stored
 export const getUsers = async () => {
   const data = await AsyncStorage.getItem(KEYS.USERS);
   if (data !== null) {
@@ -156,12 +161,14 @@ export const getUsers = async () => {
   }
 };
 
+// saves a new user account to AsyncStorage preserving any existing saved users
 export const saveUser = async (newUser) => {
   const users = await getUsers();
   users.push(newUser);
   await AsyncStorage.setItem(KEYS.USERS, JSON.stringify(users));
 };
 
+// check saved accounts for a matching username/password pair during login
 export const findUser = async (username, password) => {
   const users = await getUsers();
   return users.find(
@@ -169,7 +176,7 @@ export const findUser = async (username, password) => {
   );
 };
 
-//saving session
+// session storage helpers, track the currently logged in user and clear the session on logout
 
 export const saveSession = async (user) => {
   await AsyncStorage.setItem(KEYS.CURRENT_USER, JSON.stringify(user));
@@ -190,14 +197,17 @@ export const clearSession = async () => {
 
 export const removeData = clearSession;
 
-//exercises section
-
+// convert old muscle group names into the app's new labels
 function fixMuscleGroupName(group) {
   if (group === "Legs") return "Quads & Hamstrings";
   if (group === "Abs") return "Core";
   if (group === "Full Body") return "Glutes & Calves";
   return group;
 }
+
+/* gets exercise from storage or returns an empty list if none exist, 
+also converts old muscle group names to new ones for consistency with 
+the app's current labels */
 
 export const getExercises = async () => {
   const data = await AsyncStorage.getItem(KEYS.EXERCISES);
@@ -240,8 +250,9 @@ export const deleteExercise = async (id) => {
   await saveExercises(exercises.filter((e) => e.id !== id));
 };
 
-//meals section
+// meal storage helpers: read, add, update, and remove saved meal plans
 
+// load meals from storage or return an empty list when none exist
 export const getMeals = async () => {
   const data = await AsyncStorage.getItem(KEYS.MEALS);
   if (data !== null) {
@@ -276,8 +287,9 @@ export const deleteMeal = async (id) => {
   await saveMeals(meals.filter((m) => m.id !== id));
 };
 
-// workout section
+// workout storage helpers: read workout history, save new logs, and delete stored workouts.\
 
+// load saved workouts or return an empty list if no history exists
 export const getWorkouts = async () => {
   const data = await AsyncStorage.getItem(KEYS.WORKOUTS);
   if (data !== null) {
@@ -303,6 +315,7 @@ export const deleteWorkout = async (id) => {
   );
 };
 
+// initialize default sample data when the app is launched for the first time
 export async function initializeSampleData() {
   const existingUsers = await getUsers();
   if (existingUsers.length === 0) {

@@ -1,3 +1,4 @@
+// bottom tab menu for the main app screens.
 import React from "react";
 import { TouchableOpacity, Alert } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -13,12 +14,13 @@ import ProgressScreen from "../screens/ProgressScreen";
 import { Colors } from "../storage/Theme";
 import { clearSession } from "../storage/Storage";
 
-const Tab = createBottomTabNavigator();
+//helps functionality with android devices conflicting bottom navigation tabs
 
 export default function TabNavigator({ navigation }) {
   const insets = useSafeAreaInsets();
   const bottomSpace = Math.max(insets.bottom, 8);
 
+  // logs the user out and sends them back to the welcome screen.
   async function handleLogout() {
     Alert.alert("Log Out", "Are you sure you want to log out?", [
       { text: "Cancel", style: "cancel" },
@@ -32,6 +34,7 @@ export default function TabNavigator({ navigation }) {
     ]);
   }
 
+  // chooses which icon for each tab.
   function getIcon(routeName, focused) {
     if (routeName === "Home") return focused ? "home" : "home-outline";
     if (routeName === "Exercises")
@@ -43,6 +46,7 @@ export default function TabNavigator({ navigation }) {
     return focused ? "trending-up" : "trending-up-outline";
   }
 
+  // creates the bottom tab navigator with the appropriate screens and icons.
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

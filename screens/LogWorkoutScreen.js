@@ -1,5 +1,4 @@
-// screens/LogWorkoutScreen.js
-// Log a workout session by picking exercises, filling in details, and saving it.
+// log a workout session by picking exercises, filling in details, and saving it
 
 import React, { useState, useEffect } from "react";
 import {
@@ -19,6 +18,7 @@ import { getExercises, logWorkout } from "../storage/Storage";
 import { ScreenHeader, EmptyState } from "../components/SharedComponents";
 
 export default function LogWorkoutScreen() {
+  // stores exercises, selected workout items, and form fields
   const [exercises, setExercises] = useState([]);
   const [selectedExercises, setSelectedExercises] = useState([]);
   const [notes, setNotes] = useState("");
@@ -26,6 +26,7 @@ export default function LogWorkoutScreen() {
   const [pickModalVisible, setPickModalVisible] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  // loads exercises so the user can choose what to log
   useEffect(() => {
     loadExercises();
   }, []);
@@ -35,6 +36,7 @@ export default function LogWorkoutScreen() {
     if (data) setExercises(data);
   }
 
+  // adds an exercise to the current workout
   function addExerciseToWorkout(exercise) {
     const alreadyAdded = selectedExercises.some((e) => e.id === exercise.id);
 
@@ -59,6 +61,7 @@ export default function LogWorkoutScreen() {
     setPickModalVisible(false);
   }
 
+  // updates sets, reps, weight, or duration for one selected exercise
   function updateExerciseField(exId, field, value) {
     const updatedExercises = selectedExercises.map((exercise) => {
       if (exercise.id === exId) {
@@ -78,12 +81,13 @@ export default function LogWorkoutScreen() {
     setSelectedExercises(updatedExercises);
   }
 
+  // saves the completed workout to local storage
   async function handleSaveWorkout() {
     if (selectedExercises.length === 0) {
       Alert.alert("No Exercises", "Please add at least one exercise to log.");
       return;
     }
-
+    // makes a new workout object with the date, exercises, notes, and duration
     const newWorkout = {
       date: new Date().toISOString().split("T")[0],
       exercises: selectedExercises,
@@ -91,18 +95,22 @@ export default function LogWorkoutScreen() {
       totalDuration: totalDuration.trim() || "Not recorded",
     };
 
+    // saves the workout to local storage
     await logWorkout(newWorkout);
 
+    //clears form after the workout is saved and shows a success message
     setSelectedExercises([]);
     setNotes("");
     setTotalDuration("");
     setSaved(true);
 
+    // hides the success message after a few seconds
     setTimeout(() => setSaved(false), 3000);
 
     Alert.alert("Workout Saved!", "Your workout has been logged.");
   }
 
+  // confirms if the user wants to cancel the workout and lose entered data
   function handleCancel() {
     Alert.alert(
       "Cancel Workout",
@@ -121,7 +129,7 @@ export default function LogWorkoutScreen() {
       ],
     );
   }
-
+  // shows the main log workout screen
   return (
     <View style={SharedStyles.container}>
       <StatusBar barStyle="light-content" />
@@ -168,8 +176,7 @@ export default function LogWorkoutScreen() {
           />
           <Text style={styles.addExButtonText}>Add Exercise</Text>
         </TouchableOpacity>
-
-        {selectedExercises.length === 0 ? (
+        {selectedExercises.length === 0 ? ( //shows either the list of selected exercises or an empty state if there are none
           <EmptyState
             icon="barbell-outline"
             message="No exercises added yet"
@@ -279,7 +286,7 @@ export default function LogWorkoutScreen() {
     </View>
   );
 }
-
+// shows one selected exercise with inputs for sets, reps, weight, and duration
 function WorkoutExerciseRow({ exercise, onUpdate, onRemove }) {
   return (
     <View style={styles.exRow}>
@@ -298,7 +305,7 @@ function WorkoutExerciseRow({ exercise, onUpdate, onRemove }) {
       </View>
 
       <View style={styles.inputGrid}>
-        <MiniInput
+        <MiniInput // input component for the sets, reps, weight, and duration fields
           label="Sets"
           value={exercise.sets}
           onChangeText={(value) => onUpdate("sets", value)}
@@ -324,7 +331,7 @@ function WorkoutExerciseRow({ exercise, onUpdate, onRemove }) {
     </View>
   );
 }
-
+// small reusable input used inside each workout exercise row
 function MiniInput({ label, value, onChangeText, placeholder }) {
   return (
     <View style={styles.miniInputContainer}>
@@ -343,6 +350,7 @@ function MiniInput({ label, value, onChangeText, placeholder }) {
   );
 }
 
+// styles for the log workout screen
 const styles = StyleSheet.create({
   successBanner: {
     flexDirection: "row",

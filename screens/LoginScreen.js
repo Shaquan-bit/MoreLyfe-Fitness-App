@@ -1,6 +1,5 @@
-// screens/LoginScreen.js
-// Login screen. Checks username and password against saved users,
-// then saves the session so the app knows who's logged in.
+/* login screen. Checks username and password against saved users,
+ then saves the session so the app knows who's logged in. */
 
 import React, { useState } from "react";
 import {
@@ -20,11 +19,13 @@ import { BrandLogo } from "../components/SharedComponents";
 import { findUser, saveSession } from "../storage/Storage";
 
 export default function LoginScreen({ navigation }) {
+  // stores the user typed info into the login form.
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // checks if the entered account exists then starts the session
   async function handleLogin() {
     const cleanUsername = username.trim().toLowerCase();
     if (!cleanUsername || !password.trim()) {
@@ -48,7 +49,7 @@ export default function LoginScreen({ navigation }) {
       );
     }
   }
-
+  // displays the login form with username, password, show password, and register link.
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -128,7 +129,7 @@ export default function LoginScreen({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
-
+// styles for the login screen
 const styles = StyleSheet.create({
   container: {
     flex: 1,

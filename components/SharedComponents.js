@@ -1,3 +1,6 @@
+// components/SharedComponents.js
+// this file has reusable parts that are used on different screens.
+
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -5,6 +8,7 @@ import { Colors } from "../storage/Theme";
 
 const logoImage = require("../assets/more-lyfe-fitness-logo.jpeg");
 
+// shows a title and subtitle at the top of a screen.
 export function ScreenHeader({ title, subtitle }) {
   return (
     <View style={styles.header}>
@@ -14,6 +18,7 @@ export function ScreenHeader({ title, subtitle }) {
   );
 }
 
+// shows a small badge label on cards.
 export function Badge({ label, color }) {
   const bg = color || Colors.primary;
   const text = color ? "#FFFFFF" : Colors.textDark;
@@ -25,6 +30,7 @@ export function Badge({ label, color }) {
   );
 }
 
+// shows the app logo and lets me change the size.
 export function BrandLogo({ size = 100, compact = false, style }) {
   return (
     <Image
@@ -40,6 +46,7 @@ export function BrandLogo({ size = 100, compact = false, style }) {
   );
 }
 
+// shows a message when there is nothing in a list yet.
 export function EmptyState({ icon, message, hint }) {
   return (
     <View style={styles.empty}>
@@ -54,6 +61,7 @@ export function EmptyState({ icon, message, hint }) {
   );
 }
 
+// shows an image or a blank placeholder if there is no image.
 export function AppImage({ source, width, height, style }) {
   const imgStyle = [
     styles.appImg,
@@ -66,6 +74,7 @@ export function AppImage({ source, width, height, style }) {
   return <Image source={source} style={imgStyle} resizeMode="cover" />;
 }
 
+// shows a small box for stats like totals and progress.
 export function StatBox({ value, label, icon }) {
   return (
     <View style={styles.statBox}>

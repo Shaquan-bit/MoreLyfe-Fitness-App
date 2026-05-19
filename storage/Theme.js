@@ -1,3 +1,6 @@
+// main colors and shared styles used across the app.
+
+// app color for backgrounds, text, borders, buttons, and status states
 export const Colors = {
   background: "#0A0A0A",
   surface: "#141414",
@@ -17,6 +20,7 @@ export const Colors = {
   border: "#2A2A2A",
 };
 
+// reusable shared style blocks for containers, cards, buttons, inputs, and spacing
 export const SharedStyles = {
   container: {
     flex: 1,

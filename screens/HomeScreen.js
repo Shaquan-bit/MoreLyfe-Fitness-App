@@ -1,3 +1,6 @@
+/* main dashboard for the app, shows the user summary, training focus,
+recommended exercises, and quick progress information. */
+
 import React, { useState, useCallback } from "react";
 import {
   View,
@@ -20,6 +23,8 @@ import {
 } from "../storage/Storage";
 import { BrandLogo } from "../components/SharedComponents";
 
+//the images used for the exercise recommendations for demo purposes
+
 const workoutImages = {
   pushUps: require("../assets/push-ups.jpeg"),
   squats: require("../assets/squats.jpeg"),
@@ -28,12 +33,14 @@ const workoutImages = {
 };
 
 export default function HomeScreen({ navigation }) {
+  // state variables tht hold the saved app data used on the dashboard.
   const [user, setUser] = useState(null);
   const [meals, setMeals] = useState([]);
   const [workouts, setWorkouts] = useState([]);
   const [exercises, setExercises] = useState([]);
   const [selectedFocus, setSelectedFocus] = useState("Chest");
 
+  // loading fresh data whenever the user comes back to the Home tab
   useFocusEffect(
     useCallback(() => {
       loadData();
@@ -51,7 +58,7 @@ export default function HomeScreen({ navigation }) {
     setWorkouts(savedWorkouts || []);
     setExercises(savedExercises || []);
   }
-
+  // helper functions to calculate the displayed information on the dashboard
   function getFirstName() {
     if (!user || !user.fullName) return "Friend";
     return user.fullName.split(" ")[0];
@@ -93,6 +100,7 @@ export default function HomeScreen({ navigation }) {
     return workoutImages.pushUps;
   }
 
+  // picks the correct recommendations based on the selected muscle group
   function getRecommendedExercises() {
     const matchingExercises = exercises.filter((exercise) => {
       const name = (exercise.name || "").toLowerCase();
@@ -164,7 +172,6 @@ export default function HomeScreen({ navigation }) {
 
     return matchingExercises.slice(0, 2);
   }
-
   const focusOptions = [
     { label: "Chest", icon: "body-outline" },
     { label: "Back", icon: "accessibility-outline" },
@@ -336,6 +343,8 @@ function WorkoutCard({ image, title, info, onPress }) {
     </TouchableOpacity>
   );
 }
+
+// styles for the HomeScreen and all the components
 
 const styles = StyleSheet.create({
   scrollContent: {

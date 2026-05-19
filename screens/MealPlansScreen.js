@@ -1,3 +1,5 @@
+// users can add, view, edit, and delete meal plans
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -19,6 +21,8 @@ import {
   AppImage,
 } from "../components/SharedComponents";
 
+//meal images for sample meals
+
 const mealImages = {
   oatmeal: require("../assets/blueberry-banana-oatmeal.jpg"),
   macPie: require("../assets/mac-pie.jpeg"),
@@ -26,6 +30,7 @@ const mealImages = {
   chickenRice: require("../assets/rice-with-chicken.jpeg"),
 };
 
+// gives a matching image for the sample meal names
 function getMealImage(meal) {
   const name = (meal.name || "").toLowerCase();
 
@@ -42,6 +47,7 @@ function getMealImage(meal) {
 }
 
 export default function MealPlansScreen() {
+  // stores the list of meals and the current form information.
   const [meals, setMeals] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingMeal, setEditingMeal] = useState(null);
@@ -61,17 +67,18 @@ export default function MealPlansScreen() {
     loadMeals();
   }, []);
 
+  // reads meals from local storage
   async function loadMeals() {
     const data = await getMeals();
     if (data) setMeals(data);
   }
-
+  // opens the add meal modal and clears any previous form data
   function openAddModal() {
     setEditingMeal(null);
     clearForm();
     setModalVisible(true);
   }
-
+  //editing the meal plan opens the modal and fills the form with the meal's current info for easy editing
   function openEditModal(meal) {
     setEditingMeal(meal);
     setFormName(meal.name);
@@ -82,7 +89,7 @@ export default function MealPlansScreen() {
     setFormTimeOfDay(meal.timeOfDay);
     setModalVisible(true);
   }
-
+  //clears the meal form inputs after adding/editing a meal or when the modal is closed
   function clearForm() {
     setFormName("");
     setFormCalories("");
@@ -92,6 +99,7 @@ export default function MealPlansScreen() {
     setFormTimeOfDay("");
   }
 
+  // saves either a new meal plan or edits an existing one.
   async function handleSave() {
     if (!formName.trim() || !formCalories || !formTimeOfDay) {
       Alert.alert(
@@ -100,7 +108,7 @@ export default function MealPlansScreen() {
       );
       return;
     }
-
+    // if editing, update the meal, otherwise add a new meal
     if (editingMeal) {
       const update = {
         ...editingMeal,
@@ -125,12 +133,12 @@ export default function MealPlansScreen() {
       await addMeal(newMeal);
       Alert.alert("Added!", "New meal plan has been added.");
     }
-
+    // after saving, reload the meals to update the list, close the modal, and clear the form for next time
     await loadMeals();
     setModalVisible(false);
     clearForm();
   }
-
+  // deletes a meal plan after confirming with the user
   function handleDelete(meal) {
     Alert.alert("Delete Meal Plan", `Delete "${meal.name}"?`, [
       { text: "Cancel", style: "cancel" },

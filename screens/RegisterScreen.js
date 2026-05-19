@@ -1,3 +1,5 @@
+// lets a new user create an account
+
 import React, { useState } from "react";
 import {
   View,
@@ -17,6 +19,7 @@ import { BrandLogo } from "../components/SharedComponents";
 import { getUsers, saveUser } from "../storage/Storage";
 
 export default function RegisterScreen({ navigation }) {
+  // stores all the values typed into the register form
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
@@ -25,6 +28,7 @@ export default function RegisterScreen({ navigation }) {
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
 
+  // these are the fitness goals the user can choose from
   const goalOptions = [
     "Lose Weight",
     "Build Muscle",
@@ -33,6 +37,7 @@ export default function RegisterScreen({ navigation }) {
     "Increase Flexibility",
   ];
 
+  // checks the form before the account is saved
   function validateForm() {
     const cleanAge = parseInt(age, 10);
 
@@ -79,9 +84,11 @@ export default function RegisterScreen({ navigation }) {
     return true;
   }
 
+  // creates the account if the form is valid and the username is not taken
   async function handleRegister() {
     if (!validateForm()) return;
 
+    // this checks if another user already has the same username
     const existingUsers = await getUsers();
     const usernameTaken = existingUsers.some(
       (us) => us.username.toLowerCase() === username.toLowerCase(),
@@ -95,6 +102,7 @@ export default function RegisterScreen({ navigation }) {
       return;
     }
 
+    // this is the new user object that will be saved
     const newUser = {
       id: Date.now().toString(),
       fullName: fullName.trim(),
@@ -114,6 +122,7 @@ export default function RegisterScreen({ navigation }) {
     );
   }
 
+  // shows the full register screen with all input fields and buttons
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -172,6 +181,7 @@ export default function RegisterScreen({ navigation }) {
         />
 
         <Text style={SharedStyles.label}>Fitness Goal</Text>
+        {/* shows the goal choices as buttons */}
         <View style={styles.goalsRow}>
           {goalOptions.map((goal) => (
             <TouchableOpacity
@@ -245,6 +255,7 @@ export default function RegisterScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  // styles for the register screen
   container: {
     flex: 1,
     backgroundColor: Colors.background,

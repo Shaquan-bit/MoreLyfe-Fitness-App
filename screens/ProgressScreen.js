@@ -1,3 +1,5 @@
+// shows workout totals, progress stats, and workout history
+
 import React, { useState, useCallback } from "react";
 import {
   View,
@@ -19,26 +21,31 @@ import {
 } from "../components/SharedComponents";
 
 export default function ProgressScreen() {
+  // stores workouts and the workout selected for the details modal
   const [workouts, setWorkouts] = useState([]);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [detailVisible, setDetailVisible] = useState(false);
 
+  // refreshes the progress screen whenever this tab is opened
   useFocusEffect(
     useCallback(() => {
       loadWorkouts();
     }, []),
   );
 
+  // loads all saved workouts from local storage
   async function loadWorkouts() {
     const data = await getWorkouts();
     if (data) setWorkouts(data);
   }
 
+  // opens the popup with full workout details
   function openDetail(workout) {
     setSelectedWorkout(workout);
     setDetailVisible(true);
   }
 
+  // makes the saved date easier to read on the screen
   function formatDate(dateStr) {
     const date = dateStr ? new Date(dateStr) : null;
     if (!date || Number.isNaN(date.getTime())) {
@@ -53,6 +60,7 @@ export default function ProgressScreen() {
     });
   }
 
+  // finds the exercise the user has logged most often
   function getMostPerformed() {
     const counts = {};
     let topExercise = "None yet";
@@ -72,13 +80,14 @@ export default function ProgressScreen() {
 
     return topExercise;
   }
-
+  // calculates total workouts, exercises, and most performed exercise for the summary stats at the top of the screen
   const totalWorkouts = workouts.length;
   const totalExercises = workouts.reduce((sum, workout) => {
     return sum + (workout.exercises?.length || 0);
   }, 0);
   const mostPerformed = getMostPerformed();
-
+  /* shows the progress screen with workout totals, workout history,
+ and a popup modal for viewing full workout details. */
   return (
     <View style={SharedStyles.container}>
       <StatusBar barStyle="light-content" />
@@ -258,7 +267,7 @@ export default function ProgressScreen() {
     </View>
   );
 }
-
+// small box used inside the exercise details to show sets, reps, weight, and duration in a compact format
 function DetailStat({ label, value }) {
   return (
     <View style={styles.detailStat}>
@@ -267,7 +276,7 @@ function DetailStat({ label, value }) {
     </View>
   );
 }
-
+// styles for the detail popup inside the progress screen
 const styles = StyleSheet.create({
   statsRow: {
     flexDirection: "row",
