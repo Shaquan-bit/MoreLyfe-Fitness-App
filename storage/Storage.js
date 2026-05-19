@@ -1,4 +1,4 @@
-// local storage helpers for app data: users, login session, exercises, meals, workouts, and sample seed data.
+// local storage helpers for app data: users, login session, exercises, meals, workouts, and sample seed data
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -149,7 +149,7 @@ export const SAMPLE_USERS = [
   },
 ];
 
-// user storage helpers: load saved accounts, persist new users, and validate login credentials.
+// user storage helpers: load saved accounts, persist new users, and validate login credentials
 
 // load the saved users list from AsyncStorage or return an empty array if no users are stored
 export const getUsers = async () => {
@@ -164,16 +164,28 @@ export const getUsers = async () => {
 // saves a new user account to AsyncStorage preserving any existing saved users
 export const saveUser = async (newUser) => {
   const users = await getUsers();
-  users.push(newUser);
+  const normalizedUser = {
+    ...newUser,
+    username: newUser.username.trim().toLowerCase(),
+    password: newUser.password.trim(),
+  };
+
+  users.push(normalizedUser);
   await AsyncStorage.setItem(KEYS.USERS, JSON.stringify(users));
 };
 
 // check saved accounts for a matching username/password pair during login
 export const findUser = async (username, password) => {
   const users = await getUsers();
-  return users.find(
-    (us) => us.username === username && us.password === password,
-  );
+  const normalizedUsername = username.trim().toLowerCase();
+  const normalizedPassword = password.trim();
+
+  return users.find((us) => {
+    return (
+      us.username.trim().toLowerCase() === normalizedUsername &&
+      us.password.trim() === normalizedPassword
+    );
+  });
 };
 
 // session storage helpers, track the currently logged in user and clear the session on logout
@@ -196,6 +208,38 @@ export const clearSession = async () => {
 };
 
 export const removeData = clearSession;
+
+const normalizeUsername = (username) => username?.trim().toLowerCase();
+
+const getUserSpecificKey = (baseKey, username) => {
+  const cleanUsername = normalizeUsername(username);
+  return cleanUsername ? `${baseKey}_${cleanUsername}` : null;
+};
+
+const getCurrentStorageKey = async (baseKey) => {
+  const session = await getSession();
+  if (!session?.username) return null;
+  return getUserSpecificKey(baseKey, session.username);
+};
+
+const getStoredData = async (storageKey, fallbackKey) => {
+  if (!storageKey) return [];
+
+  const data = await AsyncStorage.getItem(storageKey);
+  if (data !== null) {
+    return JSON.parse(data);
+  }
+
+  if (!fallbackKey) return [];
+
+  const fallbackData = await AsyncStorage.getItem(fallbackKey);
+  if (fallbackData !== null) {
+    await AsyncStorage.setItem(storageKey, fallbackData);
+    return JSON.parse(fallbackData);
+  }
+
+  return [];
+};
 
 // convert old muscle group names into the app's new labels
 function fixMuscleGroupName(group) {
@@ -254,16 +298,14 @@ export const deleteExercise = async (id) => {
 
 // load meals from storage or return an empty list when none exist
 export const getMeals = async () => {
-  const data = await AsyncStorage.getItem(KEYS.MEALS);
-  if (data !== null) {
-    return JSON.parse(data);
-  } else {
-    return [];
-  }
+  const storageKey = await getCurrentStorageKey(KEYS.MEALS);
+  return await getStoredData(storageKey);
 };
 
 const saveMeals = async (meals) => {
-  await AsyncStorage.setItem(KEYS.MEALS, JSON.stringify(meals));
+  const storageKey = await getCurrentStorageKey(KEYS.MEALS);
+  if (!storageKey) return;
+  await AsyncStorage.setItem(storageKey, JSON.stringify(meals));
 };
 
 export const addMeal = async (meal) => {
@@ -287,30 +329,32 @@ export const deleteMeal = async (id) => {
   await saveMeals(meals.filter((m) => m.id !== id));
 };
 
-// workout storage helpers: read workout history, save new logs, and delete stored workouts.\
+// workout storage helpers: read workout history, save new logs, and delete stored workouts
 
 // load saved workouts or return an empty list if no history exists
 export const getWorkouts = async () => {
-  const data = await AsyncStorage.getItem(KEYS.WORKOUTS);
-  if (data !== null) {
-    return JSON.parse(data);
-  } else {
-    return [];
-  }
+  const storageKey = await getCurrentStorageKey(KEYS.WORKOUTS);
+  return await getStoredData(storageKey);
 };
 
 export const logWorkout = async (workout) => {
+  const storageKey = await getCurrentStorageKey(KEYS.WORKOUTS);
+  if (!storageKey) return;
+
   const workouts = await getWorkouts();
   workout.id = Date.now().toString();
   workout.date = workout.date || new Date().toISOString().split("T")[0];
   workouts.push(workout);
-  await AsyncStorage.setItem(KEYS.WORKOUTS, JSON.stringify(workouts));
+  await AsyncStorage.setItem(storageKey, JSON.stringify(workouts));
 };
 
 export const deleteWorkout = async (id) => {
+  const storageKey = await getCurrentStorageKey(KEYS.WORKOUTS);
+  if (!storageKey) return;
+
   const workouts = await getWorkouts();
   await AsyncStorage.setItem(
-    KEYS.WORKOUTS,
+    storageKey,
     JSON.stringify(workouts.filter((w) => w.id !== id)),
   );
 };
@@ -324,7 +368,14 @@ export async function initializeSampleData() {
       KEYS.EXERCISES,
       JSON.stringify(SAMPLE_EXERCISES),
     );
-    await AsyncStorage.setItem(KEYS.MEALS, JSON.stringify(SAMPLE_MEALS));
-    await AsyncStorage.setItem(KEYS.WORKOUTS, JSON.stringify(SAMPLE_WORKOUTS));
+
+    await AsyncStorage.setItem(
+      `${KEYS.MEALS}_demo`,
+      JSON.stringify(SAMPLE_MEALS),
+    );
+    await AsyncStorage.setItem(
+      `${KEYS.WORKOUTS}_demo`,
+      JSON.stringify(SAMPLE_WORKOUTS),
+    );
   }
 }

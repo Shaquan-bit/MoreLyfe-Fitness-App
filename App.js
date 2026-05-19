@@ -25,16 +25,17 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // initialize sample data and load saved session before rendering app
     async function startApp() {
-      await initializeSampleData();
-
-      const currentUser = await getSession();
-      setIsLoggedIn(!!currentUser);
-
-      setIsLoading(false);
+      try {
+        await initializeSampleData();
+        const currentUser = await getSession();
+        setIsLoggedIn(!!currentUser);
+      } catch (error) {
+        console.log("Startup error:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
-
     startApp();
   }, []);
 

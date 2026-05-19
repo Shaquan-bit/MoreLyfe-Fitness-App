@@ -1,6 +1,6 @@
 // log a workout session by picking exercises, filling in details, and saving it
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,8 +11,11 @@ import {
   Alert,
   Modal,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 import { Colors, SharedStyles } from "../storage/Theme";
 import { getExercises, logWorkout } from "../storage/Storage";
 import { ScreenHeader, EmptyState } from "../components/SharedComponents";
@@ -27,9 +30,11 @@ export default function LogWorkoutScreen() {
   const [saved, setSaved] = useState(false);
 
   // loads exercises so the user can choose what to log
-  useEffect(() => {
-    loadExercises();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadExercises();
+    }, []),
+  );
 
   async function loadExercises() {
     const data = await getExercises();
@@ -131,7 +136,11 @@ export default function LogWorkoutScreen() {
   }
   // shows the main log workout screen
   return (
-    <View style={SharedStyles.container}>
+    <KeyboardAvoidingView
+      style={SharedStyles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 80}
+    >
       <StatusBar barStyle="light-content" />
 
       <ScreenHeader title="Log Workout" subtitle="Record your session" />
@@ -283,7 +292,7 @@ export default function LogWorkoutScreen() {
           </View>
         </View>
       </Modal>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 // shows one selected exercise with inputs for sets, reps, weight, and duration
