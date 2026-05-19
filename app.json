@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0D0D0D"
-      }
+      },
+      "package": "com.shaquan_clair.morelyfefitness"
     },
     "web": {
       "favicon": "./assets/favicon.png"
