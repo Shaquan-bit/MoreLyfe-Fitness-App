@@ -152,7 +152,7 @@ export default function MealPlansScreen() {
       },
     ]);
   }
-
+  // toggles whether a meal card is expanded to show more details or not
   function toggleExpanded(mealId) {
     setExpandedId((current) => (current === mealId ? null : mealId));
   }
@@ -166,7 +166,7 @@ export default function MealPlansScreen() {
   filteredMeals.forEach((meal) => {
     totalCalories += parseInt(meal.calories) || 0;
   });
-
+  // the main return of the meal plans screen, showing the header, summary, filter tabs, meal cards, and the add/edit modal
   return (
     <View style={SharedStyles.container}>
       <StatusBar barStyle="light-content" />
@@ -364,6 +364,7 @@ export default function MealPlansScreen() {
   );
 }
 
+//render each meal card, showing more details and edit/delete buttons when expanded
 function MealCard({ meal, expanded, onToggle, onEdit, onDelete }) {
   const timeIcon = {
     Breakfast: "sunny-outline",
@@ -371,7 +372,8 @@ function MealCard({ meal, expanded, onToggle, onEdit, onDelete }) {
     Dinner: "moon-outline",
     Snack: "cafe-outline",
   };
-
+  /* shows one meal plan card the user can tap it to open the full details
+then edit or delete the meal plan from inside the expanded section. */
   return (
     <View style={styles.card}>
       <TouchableOpacity onPress={onToggle}>
@@ -446,7 +448,7 @@ function MealCard({ meal, expanded, onToggle, onEdit, onDelete }) {
     </View>
   );
 }
-
+// small box used inside the expanded meal cards to show the protein, carbs, and fats
 function NutrientBox({ label, value, unit, color }) {
   return (
     <View style={styles.nutrientBox}>
@@ -458,7 +460,7 @@ function NutrientBox({ label, value, unit, color }) {
     </View>
   );
 }
-
+// styles for the meal plans screen
 const styles = StyleSheet.create({
   summaryCard: {
     flexDirection: "row",

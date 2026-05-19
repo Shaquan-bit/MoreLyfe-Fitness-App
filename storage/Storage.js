@@ -155,8 +155,11 @@ export const SAMPLE_USERS = [
 export const getUsers = async () => {
   const data = await AsyncStorage.getItem(KEYS.USERS);
   if (data !== null) {
-    return JSON.parse(data);
+    const users = JSON.parse(data);
+    console.log("getUsers: found", users.length, "users:", users.map(u => u.username));
+    return users;
   } else {
+    console.log("getUsers: no users found in storage");
     return [];
   }
 };
@@ -172,6 +175,7 @@ export const saveUser = async (newUser) => {
 
   users.push(normalizedUser);
   await AsyncStorage.setItem(KEYS.USERS, JSON.stringify(users));
+  console.log("saveUser: saved", users.length, "users, latest:", normalizedUser.username);
 };
 
 // check saved accounts for a matching username/password pair during login
@@ -364,8 +368,7 @@ export const deleteWorkout = async (id) => {
 // initialize default sample data when the app is launched for the first time
 export async function initializeSampleData() {
   const existingUsers = await getUsers();
-  if (true) {
-    // TEMP: always re-seed
+  if (existingUsers.length === 0) {
     await AsyncStorage.setItem(KEYS.USERS, JSON.stringify(SAMPLE_USERS));
     await AsyncStorage.setItem(
       KEYS.EXERCISES,

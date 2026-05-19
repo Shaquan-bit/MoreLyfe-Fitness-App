@@ -35,18 +35,23 @@ export default function LoginScreen({ navigation }) {
 
     setLoading(true);
 
-    const matchedUser = await findUser(cleanUsername, password);
+    try {
+      const matchedUser = await findUser(cleanUsername, password);
 
-    setLoading(false);
-
-    if (matchedUser) {
-      await saveSession(matchedUser);
-      navigation.replace("MainApp");
-    } else {
-      Alert.alert(
-        "Login Failed",
-        "Incorrect username or password. Try demo / demo123",
-      );
+      if (matchedUser) {
+        await saveSession(matchedUser);
+        navigation.replace("MainApp");
+      } else {
+        Alert.alert(
+          "Login Failed",
+          "Incorrect username or password. Try demo / demo123",
+        );
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      Alert.alert("Login Failed", "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
   // displays the login form with username, password, show password, and register link.

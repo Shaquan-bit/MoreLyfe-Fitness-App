@@ -88,38 +88,46 @@ export default function RegisterScreen({ navigation }) {
   async function handleRegister() {
     if (!validateForm()) return;
 
-    // this checks if another user already has the same username
-    const existingUsers = await getUsers();
-    const usernameTaken = existingUsers.some(
-      (us) => us.username.toLowerCase() === username.toLowerCase(),
-    );
-
-    if (usernameTaken) {
-      Alert.alert(
-        "Username Taken",
-        "That username is already in use. Try another.",
+    try {
+      // this checks if another user already has the same username
+      const existingUsers = await getUsers();
+      const usernameTaken = existingUsers.some(
+        (us) => us.username.toLowerCase() === username.toLowerCase(),
       );
-      return;
+
+      if (usernameTaken) {
+        Alert.alert(
+          "Username Taken",
+          "That username is already in use. Try another.",
+        );
+        return;
+      }
+
+      // this is the new user object that will be saved
+      const newUser = {
+        id: Date.now().toString(),
+        fullName: fullName.trim(),
+        email: email.trim(),
+        age: age.trim(),
+        fitnessGoal,
+        username: username.trim(),
+        password,
+      };
+
+      await saveUser(newUser);
+
+      Alert.alert(
+        "Account Created!",
+        `Welcome, ${fullName}! You can now log in.`,
+        [{ text: "Go to Login", onPress: () => navigation.navigate("Login") }],
+      );
+    } catch (error) {
+      console.error("Registration error:", error);
+      Alert.alert(
+        "Registration Failed",
+        "Something went wrong saving your account. Please try again.",
+      );
     }
-
-    // this is the new user object that will be saved
-    const newUser = {
-      id: Date.now().toString(),
-      fullName: fullName.trim(),
-      email: email.trim(),
-      age: age.trim(),
-      fitnessGoal,
-      username: username.trim(),
-      password,
-    };
-
-    await saveUser(newUser);
-
-    Alert.alert(
-      "Account Created!",
-      `Welcome, ${fullName}! You can now log in.`,
-      [{ text: "Go to Login", onPress: () => navigation.navigate("Login") }],
-    );
   }
 
   // shows the full register screen with all input fields and buttons
