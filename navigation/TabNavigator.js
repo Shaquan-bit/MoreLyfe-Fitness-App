@@ -14,6 +14,8 @@ import ProgressScreen from "../screens/ProgressScreen";
 import { Colors } from "../storage/Theme";
 import { clearSession } from "../storage/Storage";
 
+const Tab = createBottomTabNavigator();
+
 //helps functionality with android devices conflicting bottom navigation tabs
 
 export default function TabNavigator({ navigation }) {
