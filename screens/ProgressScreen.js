@@ -47,10 +47,10 @@ export default function ProgressScreen() {
 
   // makes the saved date easier to read on the screen
   function formatDate(dateStr) {
-    const date = dateStr ? new Date(dateStr) : null;
-    if (!date || Number.isNaN(date.getTime())) {
-      return "Unknown Date";
-    }
+    if (!dateStr) return "Unknown Date";
+    const [year, month, day] = dateStr.split("-").map(Number);
+    const date = new Date(year, month - 1, day);
+    if (Number.isNaN(date.getTime())) return "Unknown Date";
 
     return date.toLocaleDateString("en-US", {
       weekday: "short",
@@ -128,7 +128,7 @@ export default function ProgressScreen() {
             hint="Head to 'Log Workout' to record your first session!"
           />
         ) : (
-          workouts.map((workout) => (
+          [...workouts].reverse().map((workout) => (
             <TouchableOpacity
               key={workout.id}
               style={styles.workoutCard}
