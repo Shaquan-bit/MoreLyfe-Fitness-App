@@ -320,8 +320,11 @@ export async function initializeSampleData() {
   const existingUsers = await getUsers();
   if (existingUsers.length === 0) {
     await AsyncStorage.setItem(KEYS.USERS, JSON.stringify(SAMPLE_USERS));
+    await AsyncStorage.setItem(
+      KEYS.EXERCISES,
+      JSON.stringify(SAMPLE_EXERCISES),
+    );
+    await AsyncStorage.setItem(KEYS.MEALS, JSON.stringify(SAMPLE_MEALS));
+    await AsyncStorage.setItem(KEYS.WORKOUTS, JSON.stringify(SAMPLE_WORKOUTS));
   }
-
-  await AsyncStorage.setItem(KEYS.MEALS, JSON.stringify(SAMPLE_MEALS));
-  await AsyncStorage.setItem(KEYS.WORKOUTS, JSON.stringify(SAMPLE_WORKOUTS));
 }
