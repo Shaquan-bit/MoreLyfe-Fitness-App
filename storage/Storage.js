@@ -299,7 +299,8 @@ export const deleteExercise = async (id) => {
 // load meals from storage or return an empty list when none exist
 export const getMeals = async () => {
   const storageKey = await getCurrentStorageKey(KEYS.MEALS);
-  return await getStoredData(storageKey);
+  const fallbackKey = `${KEYS.MEALS}_demo`;
+  return await getStoredData(storageKey, fallbackKey);
 };
 
 const saveMeals = async (meals) => {
@@ -334,7 +335,8 @@ export const deleteMeal = async (id) => {
 // load saved workouts or return an empty list if no history exists
 export const getWorkouts = async () => {
   const storageKey = await getCurrentStorageKey(KEYS.WORKOUTS);
-  return await getStoredData(storageKey);
+  const fallbackKey = `${KEYS.WORKOUTS}_demo`;
+  return await getStoredData(storageKey, fallbackKey);
 };
 
 export const logWorkout = async (workout) => {
@@ -362,7 +364,8 @@ export const deleteWorkout = async (id) => {
 // initialize default sample data when the app is launched for the first time
 export async function initializeSampleData() {
   const existingUsers = await getUsers();
-  if (existingUsers.length === 0) {
+  if (true) {
+    // TEMP: always re-seed
     await AsyncStorage.setItem(KEYS.USERS, JSON.stringify(SAMPLE_USERS));
     await AsyncStorage.setItem(
       KEYS.EXERCISES,

@@ -302,7 +302,7 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 }
-
+// card for the summary stats at the top of the dashboard
 function StatCard({ icon, number, label }) {
   return (
     <View style={styles.statCard}>
@@ -313,6 +313,7 @@ function StatCard({ icon, number, label }) {
   );
 }
 
+// for the training focus options
 function FocusChip({ label, icon, active, onPress }) {
   return (
     <TouchableOpacity
@@ -330,7 +331,7 @@ function FocusChip({ label, icon, active, onPress }) {
     </TouchableOpacity>
   );
 }
-
+// card for the recommended exercises showing an image, name, category, and muscle group & tapping it takes you to the exercise library
 function WorkoutCard({ image, title, info, onPress }) {
   return (
     <TouchableOpacity style={styles.workoutCard} onPress={onPress}>
